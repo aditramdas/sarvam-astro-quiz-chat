@@ -1,13 +1,30 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React, { useState } from 'react';
+import { LanguageProvider } from '../contexts/LanguageContext';
+import LandingPage from '../components/LandingPage';
+import QuizChat from '../components/QuizChat';
 
 const Index = () => {
+  const [showQuiz, setShowQuiz] = useState(false);
+
+  const handleStartQuiz = () => {
+    setShowQuiz(true);
+  };
+
+  const handleBackToLanding = () => {
+    setShowQuiz(false);
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <LanguageProvider>
+      <div className="app">
+        {showQuiz ? (
+          <QuizChat onBack={handleBackToLanding} />
+        ) : (
+          <LandingPage onStartQuiz={handleStartQuiz} />
+        )}
       </div>
-    </div>
+    </LanguageProvider>
   );
 };
 
