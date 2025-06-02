@@ -1,8 +1,7 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import ChatMessage from './ChatMessage';
-import { Send, ArrowLeft, Stars } from 'lucide-react';
+import { Send, ArrowLeft, Stars, Flame, Trophy } from 'lucide-react';
 
 interface QuizChatProps {
   onBack: () => void;
@@ -30,6 +29,9 @@ const QuizChat: React.FC<QuizChatProps> = ({ onBack }) => {
   const [userInput, setUserInput] = useState('');
   const [isWaitingForAnswer, setIsWaitingForAnswer] = useState(false);
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [streak, setStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [score, setScore] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const questions: Question[] = [
@@ -82,7 +84,7 @@ const QuizChat: React.FC<QuizChatProps> = ({ onBack }) => {
       // Quiz completed
       setMessages(prev => [...prev, {
         id: `complete-${Date.now()}`,
-        message: 'Congratulations! You have completed the quiz. Thank you for playing!',
+        message: `Congratulations! You completed the quiz with a final score of ${score}/${questions.length} and a best streak of ${bestStreak}! 🎉`,
         isBot: true
       }]);
       return;
@@ -113,6 +115,18 @@ const QuizChat: React.FC<QuizChatProps> = ({ onBack }) => {
     
     // Check if answer is correct
     const isCorrect = answer.toLowerCase().includes(currentQuestion.correctAnswer.toLowerCase());
+    
+    // Update streak and score
+    if (isCorrect) {
+      setScore(prev => prev + 1);
+      setStreak(prev => {
+        const newStreak = prev + 1;
+        setBestStreak(current => Math.max(current, newStreak));
+        return newStreak;
+      });
+    } else {
+      setStreak(0);
+    }
     
     setTimeout(() => {
       // Add feedback
@@ -157,20 +171,39 @@ const QuizChat: React.FC<QuizChatProps> = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-900 to-slate-900 flex flex-col">
       {/* Header */}
-      <div className="bg-white/10 backdrop-blur-lg border-b border-white/20 p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
+      <div className="bg-white/5 backdrop-blur-xl border-b border-white/10 p-4 shadow-2xl">
+        <div className="flex items-center justify-between max-w-4xl mx-auto">
+          <div className="flex items-center gap-4">
             <button
               onClick={onBack}
-              className="mr-3 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-all duration-300 border border-white/20"
             >
               <ArrowLeft className="w-5 h-5 text-white" />
             </button>
-            <div className="flex items-center">
-              <Stars className="w-6 h-6 text-purple-300 mr-2" />
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <Stars className="w-7 h-7 text-amber-400 animate-pulse" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-amber-400 rounded-full animate-ping"></div>
+              </div>
               <h1 className="text-xl font-bold text-white">{t('appTitle')}</h1>
+            </div>
+          </div>
+          
+          {/* Stats */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-xl border border-white/20">
+              <Trophy className="w-4 h-4 text-yellow-400" />
+              <span className="text-white text-sm font-medium">{score}/{questions.length}</span>
+            </div>
+            <div className="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-xl border border-white/20">
+              <Flame className={`w-4 h-4 ${streak > 0 ? 'text-orange-400' : 'text-gray-400'}`} />
+              <span className="text-white text-sm font-medium">{streak}</span>
+            </div>
+            <div className="hidden sm:flex items-center gap-2 bg-white/10 px-3 py-2 rounded-xl border border-white/20">
+              <span className="text-xs text-gray-300">Best:</span>
+              <span className="text-white text-sm font-medium">{bestStreak}</span>
             </div>
           </div>
         </div>
@@ -178,7 +211,7 @@ const QuizChat: React.FC<QuizChatProps> = ({ onBack }) => {
 
       {/* Messages area */}
       <div className="flex-1 p-4 overflow-y-auto">
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-3xl mx-auto space-y-4">
           {messages.map((msg) => (
             <ChatMessage
               key={msg.id}
@@ -193,39 +226,41 @@ const QuizChat: React.FC<QuizChatProps> = ({ onBack }) => {
 
       {/* Input area */}
       {isWaitingForAnswer && currentQuestion && (
-        <div className="bg-white/10 backdrop-blur-lg border-t border-white/20 p-4">
-          <div className="max-w-2xl mx-auto">
+        <div className="bg-white/5 backdrop-blur-xl border-t border-white/10 p-6 shadow-2xl">
+          <div className="max-w-3xl mx-auto">
             {currentQuestion.options ? (
               // Multiple choice buttons
-              <div className="grid grid-cols-1 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {currentQuestion.options.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => handleAnswer(option)}
-                    className="p-3 bg-white/20 hover:bg-white/30 rounded-xl text-white text-left transition-all duration-300 transform hover:scale-105 border border-white/30"
+                    className="group p-4 bg-white/10 hover:bg-white/20 rounded-2xl text-white text-left transition-all duration-300 transform hover:scale-[1.02] border border-white/20 hover:border-white/40 shadow-lg hover:shadow-xl"
                   >
-                    <span className="font-semibold mr-2">
-                      {index === 0 ? t('questionA') : index === 1 ? t('questionB') : index === 2 ? t('questionC') : t('questionD')}:
-                    </span>
-                    {option}
+                    <div className="flex items-center gap-3">
+                      <span className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-sm font-bold group-hover:from-purple-400 group-hover:to-pink-400 transition-all duration-300">
+                        {String.fromCharCode(65 + index)}
+                      </span>
+                      <span className="font-medium">{option}</span>
+                    </div>
                   </button>
                 ))}
               </div>
             ) : (
               // Text input
-              <div className="flex space-x-2">
+              <div className="flex gap-3">
                 <input
                   type="text"
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Type your answer..."
-                  className="flex-1 p-3 bg-white/20 border border-white/30 rounded-xl text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-purple-400 backdrop-blur-sm"
+                  className="flex-1 p-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent backdrop-blur-sm transition-all duration-300"
                 />
                 <button
                   onClick={handleSend}
                   disabled={!userInput.trim()}
-                  className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 shadow-lg hover:shadow-xl"
                 >
                   <Send className="w-5 h-5" />
                 </button>
