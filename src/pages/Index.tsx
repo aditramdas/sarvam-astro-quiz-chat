@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { LanguageProvider } from '../contexts/LanguageContext';
 import LandingPage from '../components/LandingPage';
-import QuizChat from '../components/QuizChat';
+import EnhancedQuizChat from '../components/EnhancedQuizChat';
 
 const Index = () => {
   const [showQuiz, setShowQuiz] = useState(false);
@@ -19,7 +18,7 @@ const Index = () => {
     <LanguageProvider>
       <div className="app">
         {showQuiz ? (
-          <QuizChat onBack={handleBackToLanding} />
+          <EnhancedQuizChat onBack={handleBackToLanding} />
         ) : (
           <LandingPage onStartQuiz={handleStartQuiz} />
         )}

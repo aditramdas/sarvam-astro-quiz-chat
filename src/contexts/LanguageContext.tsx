@@ -1,7 +1,6 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-export type Language = 'hindi' | 'tamil' | 'bengali' | 'marathi' | 'english';
+export type Language = 'hindi' | 'tamil' | 'bengali' | 'marathi' | 'malayalam' | 'english';
 
 interface LanguageContextType {
   currentLanguage: Language;
@@ -18,6 +17,7 @@ const translations = {
     tamil: 'Tamil',
     bengali: 'Bengali',
     marathi: 'Marathi',
+    malayalam: 'Malayalam',
     english: 'English',
     correct: 'Correct! Well done!',
     incorrect: 'Incorrect. Let me explain...',
@@ -37,6 +37,7 @@ const translations = {
     tamil: 'तमिल',
     bengali: 'बंगाली',
     marathi: 'मराठी',
+    malayalam: 'मलयालम',
     english: 'अंग्रेजी',
     correct: 'सही! बहुत अच्छा!',
     incorrect: 'गलत। मैं समझाता हूँ...',
@@ -56,6 +57,7 @@ const translations = {
     tamil: 'தமிழ்',
     bengali: 'வங்காளி',
     marathi: 'மராத்தி',
+    malayalam: 'மலையாளம்',
     english: 'ஆங்கிலம்',
     correct: 'சரி! நன்றாக செய்தீர்கள்!',
     incorrect: 'தவறு. நான் விளக்குகிறேன்...',
@@ -75,6 +77,7 @@ const translations = {
     tamil: 'তামিল',
     bengali: 'বাংলা',
     marathi: 'মারাঠি',
+    malayalam: 'মালয়ালাম',
     english: 'ইংরেজি',
     correct: 'সঠিক! খুব ভালো!',
     incorrect: 'ভুল। আমি ব্যাখ্যা করি...',
@@ -94,6 +97,7 @@ const translations = {
     tamil: 'तमिळ',
     bengali: 'बंगाली',
     marathi: 'मराठी',
+    malayalam: 'मल्याळम',
     english: 'इंग्रजी',
     correct: 'बरोबर! छान!',
     incorrect: 'चुकीचे. मी समजावून सांगतो...',
@@ -104,6 +108,26 @@ const translations = {
     questionB: 'आ',
     questionC: 'इ',
     questionD: 'ई',
+  },
+  malayalam: {
+    appTitle: 'സര്‍വം ആസ്ട്രോക്വിസ്',
+    selectLanguage: 'നിങ്ങളുടെ ഭാഷ തിരഞ്ഞെടുക്കുക',
+    startQuiz: 'ക്വിസ് ആരംഭിക്കുക',
+    hindi: 'ഹിന്ദി',
+    tamil: 'തമിഴ്',
+    bengali: 'ബംഗാളി',
+    marathi: 'മറാത്തി',
+    malayalam: 'മലയാളം',
+    english: 'ഇംഗ്ലീഷ്',
+    correct: 'ശരി! വളരെ നന്നായി!',
+    incorrect: 'തെറ്റ്. ഞാൻ വിശദീകരിക്കാം...',
+    send: 'അയയ്ക്കുക',
+    loading: 'ലോഡ് ചെയ്യുന്നു...',
+    welcome: 'സര്‍വം ആസ്ട്രോക്വിസിലേക്ക് സ്വാഗതം! ജ്യോതിഷത്തെക്കുറിച്ച് ഞാൻ നിങ്ങളോട് ചോദ്യങ്ങൾ ചോദിക്കും. നിങ്ങൾ തയ്യാറാണോ?',
+    questionA: 'അ',
+    questionB: 'ആ',
+    questionC: 'ഇ',
+    questionD: 'ഈ',
   },
 };
 
