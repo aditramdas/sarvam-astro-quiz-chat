@@ -1,6 +1,10 @@
 # Sarvam AstroQuiz - Enhanced Space Quiz App with Authentication
+![image](https://github.com/user-attachments/assets/08491e5a-e3b1-43b4-8120-b94252bb6eae)
 
 An intelligent, multilingual space quiz application that generates fresh questions using live NASA data, supports multiple Indic languages through Sarvam AI, and now includes **secure authentication** for cross-device progress sync.
+
+
+![image](https://github.com/user-attachments/assets/f3e61860-759b-4d13-a34d-8555e323ce0f)
 
 ## 🚀 New Authentication Features
 
